@@ -11,7 +11,7 @@ const state = {
 
 // === References ===
 const form = document.getElementById("new-player-form");
-/** May need a const for playerId */
+// Do I need a const for playerId
 
 
 // === Functions ===
@@ -44,11 +44,10 @@ const fetchSinglePlayer = async (playerId) => {
     // This playerId designation doesn't match the API reference(player-ID)
     // TODO
     await fetch(`${BASE_URL}/players/${id}`, {
-      method: 'GET',
+      method: "GET",
     });
     // const id = window.location.hash.slice(1);
     state.players = state.players.find((player) => player.id === +id);
-    
   } catch (err) {
     console.error(`Oh no, trouble fetching player #${playerId}!`, err);
   }
@@ -104,29 +103,36 @@ const removePlayer = async (playerId) => {
 };
 
 // === Event Listener for Submissions and Details ===
-/** The template has this event listener designed as a render... */
-form.addEventListener("submit", async (player) => {
-  player.preventDefault();
+form.addEventListener("submit", (player) => addNewPlayer(player));
+
+/**Need another event listener for the details side panel? */
+
+// === Renders ===
+
+/**
+ * Fills in `<form id="new-player-form">` with the appropriate inputs and a submit button.
+ * When the form is submitted, it should call `addNewPlayer`, fetch all players,
+ * and then render all players to the DOM.
+ */
+async function renderNewPlayerForm() {
+  // player.preventDefault();
   const formData = new FormData(form);
   try {
     const newPlayer = {
       name: formData.get("playerName"),
       breed: formData.get("playerBreed"),
       picture: formData.get("imageUrl"),
-      team: formData.get("teamNumber"), 
+      team: formData.get("teamNumber"),
       // team needs a math.random to cap #s (default is null)
       // status: bench or field (needs a math.random)
       // playerId: needs to be a unused number (probably needs a math.random)
     };
-    await addNewPlayer(newPlayer);
+    // await addNewPlayer(newPlayer);
     form.reset();
-  } catch (error) {
-    console.log(error);
+  } catch (err) {
+    console.error("Uh oh, trouble rendering the new player form!", err);
   }
-});
-/**Need another event listener for the details side panel? */
-
-// === Renders ===
+}
 
 /**
  * Updates `<main>` to display a list of all players.
@@ -147,32 +153,32 @@ form.addEventListener("submit", async (player) => {
  * Note: this function should replace the current contents of `<main>`, not append to it.
  * @param {Object[]} playerList - an array of player objects
  */
-const renderAllPlayers = (playerList) => {
-    const playerList = document.querySelector("#new-player-form");
-    if (!state.players.length) {
-      playerList.innerHTML = "<li>No players.</li>";
-      return;
-    }
-    const playerElements = state.players.map((player) => {
-      const playerCard = document.createElement("section");
-      playerCard.innerHTML = `
+const renderAllPlayers = () => {
+  const playerList = document.querySelector("#playerList");
+  if (!state.players.length) {
+    playerList.innerHTML = "<p>No players.</p>";
+    return;
+  }
+  const playerElements = state.players.map((player) => {
+    const playerCard = document.createElement("section");
+    playerCard.innerHTML = `
         <div>
           <h3>${player.name}</h3>
           <p>${player.id}</p>
           <p>${player.picture}</p>
         </div>
       `;
-  
-      // Delete Button and Event Listener
-      const deleteButton = document.createElement("button");
-      deleteButton.innerText = "Delete Player";
-      playerCard.append(deleteButton);
-      deleteButton.addEventListener("click", () => removePlayer(player));
-  
-      return playerCard;
-    });
-  
-    playerList.replaceChildren(...playerElements);
+
+    // Delete Button and Event Listener
+    const deleteButton = document.createElement("button");
+    deleteButton.innerText = "Delete Player";
+    playerCard.append(deleteButton);
+    deleteButton.addEventListener("click", () => removePlayer(player));
+
+    return playerCard;
+  });
+
+  playerList.replaceChildren(...playerElements);
 };
 
 /**
@@ -192,31 +198,16 @@ const renderSinglePlayer = (player) => {
   // TODO
 };
 
-/**
- * Fills in `<form id="new-player-form">` with the appropriate inputs and a submit button.
- * When the form is submitted, it should call `addNewPlayer`, fetch all players,
- * and then render all players to the DOM.
- */
-const renderNewPlayerForm = () => {
-  // Last time we did this with a button + Event Listener (it's above)
-  try {
-    // TODO
-  } catch (err) {
-    console.error("Uh oh, trouble rendering the new player form!", err);
-  }
-};
 
 
 /**
  * Initializes the app by fetching all players and rendering them to the DOM.
  */
-const init = async () => {
-  // Should this be state.players?
-  const players = await fetchAllPlayers();
-  renderAllPlayers(players);
-
+ function render() {
+  fetchAllPlayers();
+  renderAllPlayers();
   renderNewPlayerForm();
-};
+}
 
 // This script will be run using Node when testing, so here we're doing a quick
 // check to see if we're in Node or the browser, and exporting the functions
@@ -232,5 +223,5 @@ if (typeof window === "undefined") {
     renderNewPlayerForm,
   };
 } else {
-  init();
+  render();
 }
