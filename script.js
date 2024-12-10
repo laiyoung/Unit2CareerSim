@@ -11,8 +11,9 @@ const state = {
 
 // === References ===
 const form = document.getElementById("new-player-form");
+const playerList = document.querySelector("#playerList");
+// const player = state.players[i]
 // Do I need a const for playerId
-
 
 // === Functions ===
 /**
@@ -29,6 +30,7 @@ const fetchAllPlayers = async () => {
     }
     console.log(response.data);
     state.players = response.data;
+    console.log(state.players);
   } catch (err) {
     console.error("Uh oh, trouble fetching players!", err);
   }
@@ -58,27 +60,27 @@ const fetchSinglePlayer = async (playerId) => {
  * @param {Object} playerObj the player to add
  * @returns {Object} the player returned by the API
  */
-const addNewPlayer = async (playerObj) => {
-  try {
-    const promise = await fetch(API_URL, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(playerObj),
-    });
-    const response = await promise.json();
-    console.log(response);
+// const addNewPlayer = async (playerObj) => {
+//   try {
+//     const promise = await fetch(API_URL, {
+//       method: "POST",
+//       headers: {
+//         "Content-Type": "application/json",
+//       },
+//       body: JSON.stringify(playerObj),
+//     });
+//     const response = await promise.json();
+//     console.log(response);
 
-    if (!response.success) {
-      throw response.error;
-    }
-    console.log(response.data);
-    render();
-  } catch (err) {
-    console.error("Oops, something went wrong with adding that player!", err);
-  }
-};
+//     if (!response.success) {
+//       throw response.error;
+//     }
+//     console.log(response.data);
+//     render();
+//   } catch (err) {
+//     console.error("Oops, something went wrong with adding that player!", err);
+//   }
+// };
 
 /**
  * Removes a player from the roster via the API.
@@ -153,8 +155,7 @@ async function renderNewPlayerForm() {
  * Note: this function should replace the current contents of `<main>`, not append to it.
  * @param {Object[]} playerList - an array of player objects
  */
-const renderAllPlayers = () => {
-  const playerList = document.querySelector("#playerList");
+function renderAllPlayers() {
   if (!state.players.length) {
     playerList.innerHTML = "<p>No players.</p>";
     return;
@@ -165,21 +166,24 @@ const renderAllPlayers = () => {
         <div>
           <h3>${player.name}</h3>
           <p>${player.id}</p>
-          <p>${player.picture}</p>
         </div>
       `;
+    /**Removing the sticky wicket:
+     * // const image = image.src = player.imageUrl;
+     *   <p>${player.image}</p>
+     */
 
     // Delete Button and Event Listener
-    const deleteButton = document.createElement("button");
-    deleteButton.innerText = "Delete Player";
-    playerCard.append(deleteButton);
-    deleteButton.addEventListener("click", () => removePlayer(player));
-
+    // const deleteButton = document.createElement("button");
+    // deleteButton.innerText = "Delete Player";
+    // playerCard.append(deleteButton);
+    // deleteButton.addEventListener("click", () => removePlayer(player));
+    
     return playerCard;
   });
-
+   
   playerList.replaceChildren(...playerElements);
-};
+}
 
 /**
  * Updates `<main>` to display a single player.
@@ -198,15 +202,13 @@ const renderSinglePlayer = (player) => {
   // TODO
 };
 
-
-
 /**
  * Initializes the app by fetching all players and rendering them to the DOM.
  */
- function render() {
+function render() {
+  renderNewPlayerForm();
   fetchAllPlayers();
   renderAllPlayers();
-  renderNewPlayerForm();
 }
 
 // This script will be run using Node when testing, so here we're doing a quick

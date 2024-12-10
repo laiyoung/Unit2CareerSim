@@ -1,0 +1,49 @@
+Working on the all players render:
+ const playerElements = state.players.map((player) => {
+    const playerCard = document.createElement("section");
+    playerCard.innerHTML = `
+        <div>
+          <h3>${player.name}</h3>
+          <p>${player.id}</p>
+        </div>
+      `;
+    /**Removing the sticky wicket:
+     * // const image = image.src = player.imageUrl;
+     *   <p>${player.image}</p>
+     */
+
+    // Delete Button and Event Listener
+    // const deleteButton = document.createElement("button");
+    // deleteButton.innerText = "Delete Player";
+    // playerCard.append(deleteButton);
+    // deleteButton.addEventListener("click", () => removePlayer(player));
+    
+    return playerCard;
+  });
+
+  Another try:
+    const playerElements = state.players.map((player) => {
+    const playerCard = document.createElement("section");
+    //H1 for Puppy Name:
+    const h2 = document.createElement("h2");
+    h2.textContent = player.name;
+
+    //H2 for Puppy ID:
+    const h3 = document.createElement("h3");
+    h3.textContent = player.id;
+
+    //Image of Puppy:
+    const image = document.createElement("img");
+    image.src = player.imageUrl; //set the img src to be the imageUrl from the artist object
+    image.style.width = "50%";
+    image.style.height = "50%";
+
+    //Button to Delete the Puppy:
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Delete";
+    deleteButton.style.display = "block";
+    deleteButton.addEventListener("click", async () => {
+      // await removePlayer(player);
+    });
+
+    playerCard.append(h1, h2, image, deleteButton);
