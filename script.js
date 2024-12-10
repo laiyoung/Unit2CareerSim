@@ -21,7 +21,7 @@ const form = document.getElementById("new-player-form");
  */
 const fetchAllPlayers = async () => {
   try {
-    const promise = await fetch(API_URL);
+    const promise = await fetch(API_URL + "/players");
     const response = await promise.json();
 
     if (!response.success) {
