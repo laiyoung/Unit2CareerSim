@@ -11,7 +11,7 @@ const state = {
 
 // === References ===
 const form = document.getElementById("new-player-form");
-const playerList = document.querySelector("#playerList");
+const playerList = document.getElementById("playerList");
 // const player = state.players[i]
 // Do I need a const for playerId
 
@@ -42,17 +42,8 @@ const fetchAllPlayers = async () => {
  * @returns {Object} the player object
  */
 const fetchSinglePlayer = async (playerId) => {
-  try {
-    // This playerId designation doesn't match the API reference(player-ID)
-    // TODO
-    await fetch(`${BASE_URL}/players/${id}`, {
-      method: "GET",
-    });
-    // const id = window.location.hash.slice(1);
-    state.players = state.players.find((player) => player.id === +id);
-  } catch (err) {
-    console.error(`Oh no, trouble fetching player #${playerId}!`, err);
-  }
+  // This playerId designation doesn't match the API reference(player-ID)
+  // TODO
 };
 
 /**
@@ -60,27 +51,13 @@ const fetchSinglePlayer = async (playerId) => {
  * @param {Object} playerObj the player to add
  * @returns {Object} the player returned by the API
  */
-// const addNewPlayer = async (playerObj) => {
-//   try {
-//     const promise = await fetch(API_URL, {
-//       method: "POST",
-//       headers: {
-//         "Content-Type": "application/json",
-//       },
-//       body: JSON.stringify(playerObj),
-//     });
-//     const response = await promise.json();
-//     console.log(response);
-
-//     if (!response.success) {
-//       throw response.error;
-//     }
-//     console.log(response.data);
-//     render();
-//   } catch (err) {
-//     console.error("Oops, something went wrong with adding that player!", err);
-//   }
-// };
+const addNewPlayer = async (playerObj) => {
+  try {
+    // TODO
+  } catch (err) {
+    console.error("Oops, something went wrong with adding that player!", err);
+  }
+};
 
 /**
  * Removes a player from the roster via the API.
@@ -89,13 +66,6 @@ const fetchSinglePlayer = async (playerId) => {
 const removePlayer = async (playerId) => {
   try {
     // This playerId designation doesn't match the API reference(player-ID)
-    await fetch(API_URL + "/" + playerId, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
-    render();
   } catch (err) {
     console.error(
       `Whoops, trouble removing player #${playerId} from the roster!`,
@@ -178,10 +148,10 @@ function renderAllPlayers() {
     // deleteButton.innerText = "Delete Player";
     // playerCard.append(deleteButton);
     // deleteButton.addEventListener("click", () => removePlayer(player));
-    
+
     return playerCard;
   });
-   
+
   playerList.replaceChildren(...playerElements);
 }
 
@@ -205,7 +175,7 @@ const renderSinglePlayer = (player) => {
 /**
  * Initializes the app by fetching all players and rendering them to the DOM.
  */
-function render() {
+async function render() {
   renderNewPlayerForm();
   fetchAllPlayers();
   renderAllPlayers();

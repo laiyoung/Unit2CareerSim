@@ -1,4 +1,83 @@
-Working on the all players render:
+                              == Functions ==
+FETCH SINGLE PLAYER:
+const fetchSinglePlayer = async (playerId) => {
+  try {
+    await fetch(`${BASE_URL}/players/${id}`, {
+      method: "GET",
+    });
+    // const id = window.location.hash.slice(1);
+    state.players = state.players.find((player) => player.id === +id);
+  } catch (err) {
+    console.error(`Oh no, trouble fetching player #${playerId}!`, err);
+  }
+};
+
+ADD NEW PLAYER:
+const addNewPlayer = async (playerObj) => {
+  try {
+    const promise = await fetch(API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(playerObj),
+    });
+    const response = await promise.json();
+    console.log(response);
+
+    if (!response.success) {
+      throw response.error;
+    }
+    console.log(response.data);
+    render();
+  } catch (err) {
+    console.error("Oops, something went wrong with adding that player!", err);
+  }
+};
+
+REMOVE PLAYER: 
+const removePlayer = async (playerId) => {
+  try {
+    // This playerId designation doesn't match the API reference(player-ID)
+    await fetch(API_URL + "/" + playerId, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    render();
+  } catch (err) {
+    console.error(
+      `Whoops, trouble removing player #${playerId} from the roster!`,
+      err
+    );
+  }
+};
+
+
+                              == RENDERS ==
+FORM:
+async function renderNewPlayerForm() {
+  // player.preventDefault();
+  const formData = new FormData(form);
+  try {
+    const newPlayer = {
+      name: formData.get("playerName"),
+      breed: formData.get("playerBreed"),
+      picture: formData.get("imageUrl"),
+      team: formData.get("teamNumber"),
+      // team needs a math.random to cap #s (default is null)
+      // status: bench or field (needs a math.random)
+      // playerId: needs to be a unused number (probably needs a math.random)
+    };
+    // await addNewPlayer(newPlayer);
+    form.reset();
+  } catch (err) {
+    console.error("Uh oh, trouble rendering the new player form!", err);
+  }
+}
+
+ALL PLAYERS:
  const playerElements = state.players.map((player) => {
     const playerCard = document.createElement("section");
     playerCard.innerHTML = `
@@ -20,6 +99,7 @@ Working on the all players render:
     
     return playerCard;
   });
+
 
   Another try:
     const playerElements = state.players.map((player) => {
@@ -47,3 +127,5 @@ Working on the all players render:
     });
 
     playerCard.append(h1, h2, image, deleteButton);
+    });
+
