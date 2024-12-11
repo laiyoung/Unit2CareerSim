@@ -65,6 +65,11 @@ const addNewPlayer = async (playerObj) => {
  */
 const removePlayer = async (playerId) => {
   try {
+    console.log("removePlayer running",playerId)
+    const res=await fetch(`${API_URL}/players/${playerId}`, {method: "DELETE"} );
+    const result=res.json();
+    console.log(result);
+    render();
     // This playerId designation doesn't match the API reference(player-ID)
   } catch (err) {
     console.error(
@@ -158,7 +163,7 @@ async function renderAllPlayers() {
     const deleteButton = document.createElement("button");
     deleteButton.innerText = "Delete Player";
     playerCard.append(deleteButton);
-    deleteButton.addEventListener("click", () => removePlayer(player));
+    deleteButton.addEventListener("click", () => removePlayer(player.id));
 
     return playerCard;
   });
