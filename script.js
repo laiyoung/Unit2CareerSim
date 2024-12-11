@@ -16,6 +16,8 @@ const playerList = document.getElementById("playerList");
 // const player = state.players[i]
 // Do I need a const for playerId
 
+
+
 // === API Functions ===
 /**
  * Fetches all players from the API.
@@ -43,7 +45,21 @@ const fetchAllPlayers = async () => {
  * @returns {Object} the player object
  */
 const fetchSinglePlayer = async (playerId) => {
- 
+  try {
+    console.log(playerId.id);
+    await fetch(API_URL + "/players/" + playerId.id, {
+     method: "GET",
+     headers: {
+       "Content-Type": "application/json",
+     },
+   });
+   render();
+ } catch (err) {
+   console.error(
+     `Whoops, trouble getting player #${playerId} from the roster!`,
+     err
+   );
+ }
 };
 
 /**
@@ -217,6 +233,7 @@ async function renderAllPlayers() {
     const detailsButton = document.createElement("button");
     detailsButton.innerText = "Player Details";
     playerCard.append(detailsButton);
+    detailsButton.addEventListener("click", () => fetchSinglePlayer(player));
     // detailsButton.addEventListener("click", () => fetchSinglePlayer(player));
     // // openNav();
 
