@@ -29,7 +29,7 @@ const fetchAllPlayers = async () => {
       throw response.error;
     }
     console.log(response.data);
-    state.players = response.data;
+    state.players = response.data.players;
     console.log(state.players);
   } catch (err) {
     console.error("Uh oh, trouble fetching players!", err);
@@ -131,6 +131,7 @@ async function renderAllPlayers() {
     return;
   }
   const playerElements = state.players.map((player) => {
+    // console.log(player)
     const playerCard = document.createElement("section");
     playerCard.innerHTML = `
         <div>
@@ -180,6 +181,8 @@ async function render() {
   await fetchAllPlayers();
   renderAllPlayers();
 }
+
+render(); 
 
 // This script will be run using Node when testing, so here we're doing a quick
 // check to see if we're in Node or the browser, and exporting the functions
