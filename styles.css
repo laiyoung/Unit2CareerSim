@@ -48,7 +48,7 @@ section {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  border: 1px solid rgb(3, 5, 103);
+  border: 2px solid rgb(3, 5, 103);
   border-radius: 10px;
   width: 300px;
   padding: 0 15px 15px;
@@ -60,6 +60,8 @@ img {
   max-width: 100%;
   border-radius: 50%;
   text-align: center;
+  margin: auto;
+  padding: 20px
 }
 
 /* Puppy details side panel will require styling */

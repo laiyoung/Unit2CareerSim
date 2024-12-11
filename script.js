@@ -139,16 +139,23 @@ async function renderAllPlayers() {
           <p>${player.id}</p>
         </div>
       `;
+    // Image Set Up:
+    const image = document.createElement("img");
+      //set the img src to be the imageUrl from the player object
+    image.src = player.imageUrl; 
+    image.style.width = "50%";
+    image.style.height = "50%";
+    playerCard.append(image);
     /**Removing the sticky wicket:
      * // const image = image.src = player.imageUrl;
      *   <p>${player.image}</p>
      */
 
-    // Delete Button and Event Listener
-    // const deleteButton = document.createElement("button");
-    // deleteButton.innerText = "Delete Player";
-    // playerCard.append(deleteButton);
-    // deleteButton.addEventListener("click", () => removePlayer(player));
+    // Delete Button and Event Listener:
+    const deleteButton = document.createElement("button");
+    deleteButton.innerText = "Delete Player";
+    playerCard.append(deleteButton);
+    deleteButton.addEventListener("click", () => removePlayer(player));
 
     return playerCard;
   });
