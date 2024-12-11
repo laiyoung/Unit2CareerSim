@@ -125,7 +125,7 @@ async function renderNewPlayerForm() {
  * Note: this function should replace the current contents of `<main>`, not append to it.
  * @param {Object[]} playerList - an array of player objects
  */
-function renderAllPlayers() {
+async function renderAllPlayers() {
   if (!state.players.length) {
     playerList.innerHTML = "<p>No players.</p>";
     return;
@@ -177,7 +177,7 @@ const renderSinglePlayer = (player) => {
  */
 async function render() {
   renderNewPlayerForm();
-  fetchAllPlayers();
+  await fetchAllPlayers();
   renderAllPlayers();
 }
 

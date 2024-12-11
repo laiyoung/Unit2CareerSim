@@ -5,7 +5,6 @@
   font-weight: 400;
 }
 .header {
-  background-image: linear-gradient(rgb(155, 221, 245), white);
   padding: 1vw;
 }
 
@@ -16,6 +15,7 @@ h1 {
 
 body {
   margin: 20px 40px;
+  background-image: linear-gradient(rgb(155, 221, 245), white);
 }
 
 form {
