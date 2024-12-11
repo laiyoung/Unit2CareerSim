@@ -1,7 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@200;400;600&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@200;400;600&display=swap");
 
 * {
-  font-family: 'JetBrains Mono', monospace;
+  font-family: "JetBrains Mono", monospace;
   font-weight: 400;
 }
 .header {
@@ -15,7 +15,11 @@ h1 {
 
 body {
   margin: 20px 40px;
-  background-image: linear-gradient(rgb(155, 221, 245), white);
+  background-image: linear-gradient(
+    rgb(155, 221, 245),
+    white,
+    rgb(155, 221, 245)
+  );
 }
 
 form {
@@ -61,7 +65,7 @@ img {
   border-radius: 50%;
   text-align: center;
   margin: auto;
-  padding: 20px
+  padding: 20px;
 }
 
 /* Puppy details side panel will require styling */
