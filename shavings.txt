@@ -129,3 +129,42 @@ ALL PLAYERS:
     playerCard.append(h1, h2, image, deleteButton);
     });
 
+newPlayer:
+  const newPlayer = {
+      name: formData.get("playerName"),
+      breed: formData.get("playerBreed"),
+      picture: formData.get("imageUrl"),
+      team: formData.get("teamNumber"),
+      // team needs a math.random to cap #s (default is null)
+      // status: bench or field (needs a math.random)
+      // playerId: needs to be a unused number (probably needs a math.random)
+  }
+
+Form:
+<label for="playerName">Name:</label>
+        <input
+          id="playerName"
+          name="playerName"
+          type="text"
+          placeholder="New Puppy's Name"
+          required
+        />
+        <label for="playerBreed">Puppy Breed:</label>
+        <input
+          id="playerBreed"
+          name="playerBreed"
+          type="text"
+          placeholder="What breed is your puppy?"
+        />
+        <label> Picture: </label>
+        <input type="text" name="imageUrl" placeholder="Image URL" />
+        <!-- Not sure if the team # should be on the form or not -->
+        <label> Pick a Puppy Team: </label>
+        <input
+          id="numberClear"
+          name="teamNumber"
+          type="number"
+          min="1"
+          max="2"
+        />
+        <button type="submit">Add Puppy</button>

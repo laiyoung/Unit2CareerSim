@@ -11,11 +11,12 @@ const state = {
 
 // === References ===
 const form = document.getElementById("new-player-form");
+console.log(form);
 const playerList = document.getElementById("playerList");
 // const player = state.players[i]
 // Do I need a const for playerId
 
-// === Functions ===
+// === API Functions ===
 /**
  * Fetches all players from the API.
  * @returns {Object[]} the array of player objects
@@ -42,8 +43,7 @@ const fetchAllPlayers = async () => {
  * @returns {Object} the player object
  */
 const fetchSinglePlayer = async (playerId) => {
-  // This playerId designation doesn't match the API reference(player-ID)
-  // TODO
+ 
 };
 
 /**
@@ -53,7 +53,21 @@ const fetchSinglePlayer = async (playerId) => {
  */
 const addNewPlayer = async (playerObj) => {
   try {
-    // TODO
+    const promise = await fetch(API_URL + "/players", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(playerObj),
+    });
+    const response = await promise.json();
+    console.log(response);
+
+    if (!response.success) {
+      throw response.error;
+    }
+    console.log(state.players);
+    render();
   } catch (err) {
     console.error("Oops, something went wrong with adding that player!", err);
   }
@@ -65,7 +79,14 @@ const addNewPlayer = async (playerObj) => {
  */
 const removePlayer = async (playerId) => {
   try {
-    // This playerId designation doesn't match the API reference(player-ID)
+     console.log(playerId.id);
+     await fetch(API_URL + "/players/" + playerId.id, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    render();
   } catch (err) {
     console.error(
       `Whoops, trouble removing player #${playerId} from the roster!`,
@@ -73,11 +94,36 @@ const removePlayer = async (playerId) => {
     );
   }
 };
+// === Navigation Functions ===
+// function openNav() {
+//   document.getElementById("mySidepanel").style.width = "250px";
+// }
 
-// === Event Listener for Submissions and Details ===
-form.addEventListener("submit", (player) => addNewPlayer(player));
+// === Event Listeners ===
 
-/**Need another event listener for the details side panel? */
+// Form Listener:
+form.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  try {
+    const formData = new FormData(form);
+  const newPlayer = {
+    name: form.playerName.value,
+    breed: form.playerBreed.value,
+    image: form.imageUrl.value,
+  };
+  console.log(newPlayer);
+  // Post to endpoint with current form values to create and add an event
+   await addNewPlayer(newPlayer)
+
+  // Clear form inputs
+  form.reset();
+} catch (err) {
+  console.log(err);
+}
+ 
+});
+// form.reset();
+ // await addNewPlayer(newPlayer);
 
 // === Renders ===
 
@@ -87,24 +133,51 @@ form.addEventListener("submit", (player) => addNewPlayer(player));
  * and then render all players to the DOM.
  */
 async function renderNewPlayerForm() {
-  // player.preventDefault();
-  const formData = new FormData(form);
   try {
-    const newPlayer = {
-      name: formData.get("playerName"),
-      breed: formData.get("playerBreed"),
-      picture: formData.get("imageUrl"),
-      team: formData.get("teamNumber"),
-      // team needs a math.random to cap #s (default is null)
-      // status: bench or field (needs a math.random)
-      // playerId: needs to be a unused number (probably needs a math.random)
-    };
-    // await addNewPlayer(newPlayer);
-    form.reset();
-  } catch (err) {
-    console.error("Uh oh, trouble rendering the new player form!", err);
-  }
+    form.innerHTML = `
+        <div>
+         <label for="playerName">Name:</label>
+        <input
+          id="playerName"
+          name="playerName"
+          type="text"
+          placeholder="New Puppy's Name"
+          required
+        />
+        </div>
+        <div>
+        <label for="playerBreed">Puppy Breed:</label>
+        <input
+          id="playerBreed"
+          name="playerBreed"
+          type="text"
+          placeholder="What breed is your puppy?"
+        />
+        </div>
+        <div>
+        <label> Picture: </label>
+        <input type="text" name="imageUrl" placeholder="Image URL" />
+    </div>
+    <div>
+        <label> Pick a Puppy Team: </label>
+        <input
+          id="numberClear"
+          name="teamNumber"
+          type="number"
+          min="1"
+          max="2"
+        />
+        </div>
+        <div>
+        <button type="submit">Add Puppy</button> 
+        </div>
+      `;
+  
+} catch (err) {
+  console.error("Uh oh, trouble rendering the new player form!", err);
 }
+}
+  
 
 /**
  * Updates `<main>` to display a list of all players.
@@ -144,7 +217,8 @@ async function renderAllPlayers() {
     const detailsButton = document.createElement("button");
     detailsButton.innerText = "Player Details";
     playerCard.append(detailsButton);
-    detailsButton.addEventListener("click", () => fetchSinglePlayer(player));
+    // detailsButton.addEventListener("click", () => fetchSinglePlayer(player));
+    // // openNav();
 
     // Image Set Up:
     const image = document.createElement("img");

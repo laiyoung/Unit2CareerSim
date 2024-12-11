@@ -26,9 +26,10 @@ form {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
+  align-items: flex-start;
   gap: 3px;
   margin-bottom: 15px;
+  width: 100vw
 }
 
 form input {
@@ -38,7 +39,7 @@ form input {
 form input,
 form label,
 form button {
-  width: 60%;
+  width: 100%;
 }
 
 article {
