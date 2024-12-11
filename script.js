@@ -136,20 +136,23 @@ async function renderAllPlayers() {
     playerCard.innerHTML = `
         <div>
           <h3>${player.name}</h3>
+          <p>Player ID: <p>
           <p>${player.id}</p>
         </div>
       `;
+    // Player Details Button and Event Listener:
+    const detailsButton = document.createElement("button");
+    detailsButton.innerText = "Player Details";
+    playerCard.append(detailsButton);
+    detailsButton.addEventListener("click", () => fetchSinglePlayer(player));
+
     // Image Set Up:
     const image = document.createElement("img");
-      //set the img src to be the imageUrl from the player object
-    image.src = player.imageUrl; 
+    //set the img src to be the imageUrl from the player object
+    image.src = player.imageUrl;
     image.style.width = "50%";
     image.style.height = "50%";
     playerCard.append(image);
-    /**Removing the sticky wicket:
-     * // const image = image.src = player.imageUrl;
-     *   <p>${player.image}</p>
-     */
 
     // Delete Button and Event Listener:
     const deleteButton = document.createElement("button");
@@ -189,7 +192,7 @@ async function render() {
   renderAllPlayers();
 }
 
-render(); 
+render();
 
 // This script will be run using Node when testing, so here we're doing a quick
 // check to see if we're in Node or the browser, and exporting the functions
