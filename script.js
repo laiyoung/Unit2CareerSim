@@ -7,16 +7,13 @@ const API_URL = `https://fsa-puppy-bowl.herokuapp.com/api/${cohortName}`;
 
 const state = {
   players: [],
+  player: {},
 };
 
 // === References ===
 const form = document.getElementById("new-player-form");
 console.log(form);
 const playerList = document.getElementById("playerList");
-// const player = state.players[i]
-// Do I need a const for playerId
-
-
 
 // === API Functions ===
 /**
@@ -47,19 +44,22 @@ const fetchAllPlayers = async () => {
 const fetchSinglePlayer = async (playerId) => {
   try {
     console.log(playerId.id);
-    await fetch(API_URL + "/players/" + playerId.id, {
-     method: "GET",
-     headers: {
-       "Content-Type": "application/json",
-     },
-   });
-   render();
- } catch (err) {
-   console.error(
-     `Whoops, trouble getting player #${playerId} from the roster!`,
-     err
-   );
- }
+    const promise = await fetch(API_URL + "/players/" + playerId.id, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    const response = await promise.json();
+    state.player = response.data.player;
+    // console.log(response.data.player);
+    // render();
+  } catch (err) {
+    console.error(
+      `Whoops, trouble getting player #${playerId} from the roster!`,
+      err
+    );
+  }
 };
 
 /**
@@ -95,8 +95,8 @@ const addNewPlayer = async (playerObj) => {
  */
 const removePlayer = async (playerId) => {
   try {
-     console.log(playerId.id);
-     await fetch(API_URL + "/players/" + playerId.id, {
+    console.log(playerId.id);
+    await fetch(API_URL + "/players/" + playerId.id, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -110,36 +110,29 @@ const removePlayer = async (playerId) => {
     );
   }
 };
-// === Navigation Functions ===
-// function openNav() {
-//   document.getElementById("mySidepanel").style.width = "250px";
-// }
 
-// === Event Listeners ===
+// === Event Listener ===
 
 // Form Listener:
 form.addEventListener("submit", async (event) => {
   event.preventDefault();
   try {
     const formData = new FormData(form);
-  const newPlayer = {
-    name: form.playerName.value,
-    breed: form.playerBreed.value,
-    image: form.imageUrl.value,
-  };
-  console.log(newPlayer);
-  // Post to endpoint with current form values to create and add an event
-   await addNewPlayer(newPlayer)
+    const newPlayer = {
+      name: form.playerName.value,
+      breed: form.playerBreed.value,
+      image: form.imageUrl.value,
+    };
+    console.log(newPlayer);
+    // Post to endpoint with current form values to create and add an event
+    await addNewPlayer(newPlayer);
 
-  // Clear form inputs
-  form.reset();
-} catch (err) {
-  console.log(err);
-}
- 
+    // Clear form inputs
+    form.reset();
+  } catch (err) {
+    console.log(err);
+  }
 });
-// form.reset();
- // await addNewPlayer(newPlayer);
 
 // === Renders ===
 
@@ -188,12 +181,10 @@ async function renderNewPlayerForm() {
         <button type="submit">Add Puppy</button> 
         </div>
       `;
-  
-} catch (err) {
-  console.error("Uh oh, trouble rendering the new player form!", err);
+  } catch (err) {
+    console.error("Uh oh, trouble rendering the new player form!", err);
+  }
 }
-}
-  
 
 /**
  * Updates `<main>` to display a list of all players.
@@ -214,28 +205,33 @@ async function renderNewPlayerForm() {
  * Note: this function should replace the current contents of `<main>`, not append to it.
  * @param {Object[]} playerList - an array of player objects
  */
-async function renderAllPlayers() {
-  if (!state.players.length) {
+async function renderAllPlayers(players) {
+  // console.log("RENDERALL",players);
+  if (!players.length) {
     playerList.innerHTML = "<p>No players.</p>";
     return;
   }
-  const playerElements = state.players.map((player) => {
-    // console.log(player)
+  const playerElements = players.map((player) => {
+    // console.log("MAP",player)
     const playerCard = document.createElement("section");
     playerCard.innerHTML = `
         <div>
           <h3>${player.name}</h3>
-          <p>Player ID: <p>
+          <p>Player ID: </p>
           <p>${player.id}</p>
         </div>
       `;
+    playerList.append(playerCard);
+    // console.log("CARD",playerCard.innerHTML);
+
     // Player Details Button and Event Listener:
     const detailsButton = document.createElement("button");
     detailsButton.innerText = "Player Details";
     playerCard.append(detailsButton);
-    detailsButton.addEventListener("click", () => fetchSinglePlayer(player));
-    // detailsButton.addEventListener("click", () => fetchSinglePlayer(player));
-    // // openNav();
+    detailsButton.addEventListener("click", async () => {
+      await fetchSinglePlayer(player);
+      renderSinglePlayer(state.player);
+    });
 
     // Image Set Up:
     const image = document.createElement("img");
@@ -253,8 +249,9 @@ async function renderAllPlayers() {
 
     return playerCard;
   });
-
+  // console.log("BEFOREREPLACE", playerElements);
   playerList.replaceChildren(...playerElements);
+  // console.log("AFTERPLACE", playerList.innerHTML);
 }
 
 /**
@@ -271,7 +268,29 @@ async function renderAllPlayers() {
  * @param {Object} player an object representing a single player
  */
 const renderSinglePlayer = (player) => {
-  // TODO
+  const details = document.createElement("section");
+  details.innerHTML = `
+  <h3>${player.name}</h3>
+   <p>Player ID: </p>
+    <p>${player.id}</p>
+    <p>${player.status}<p>
+   
+`;
+
+  // Image Set Up:
+  const image = document.createElement("img");
+  //set the img src to be the imageUrl from the player object
+  image.src = player.imageUrl;
+  image.style.width = "50%";
+  image.style.height = "50%";
+  details.append(image);
+
+  const backButton = document.createElement("button");
+  backButton.innerText = "Back to Roster";
+  details.append(backButton);
+  backButton.addEventListener("click", () => render());
+
+  playerList.replaceChildren(details);
 };
 
 /**
@@ -280,7 +299,7 @@ const renderSinglePlayer = (player) => {
 async function render() {
   renderNewPlayerForm();
   await fetchAllPlayers();
-  renderAllPlayers();
+  renderAllPlayers(state.players);
 }
 
 render();

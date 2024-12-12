@@ -168,3 +168,7 @@ Form:
           max="2"
         />
         <button type="submit">Add Puppy</button>
+
+         <div id="detailsSidepanel" class="sidepanel">
+      <!-- <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a> -->
+    </div>
