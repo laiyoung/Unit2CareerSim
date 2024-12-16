@@ -8,6 +8,7 @@ const API_URL = `https://fsa-puppy-bowl.herokuapp.com/api/${cohortName}`;
 const state = {
   players: [],
   player: {},
+  teams: [],
 };
 
 // === References ===
@@ -28,7 +29,7 @@ const fetchAllPlayers = async () => {
     if (!response.success) {
       throw response.error;
     }
-    // console.log(response.data);
+    console.log(response.data);
     state.players = response.data.players;
     // console.log(state.players);
   } catch (err) {
@@ -110,6 +111,23 @@ const removePlayer = async (playerId) => {
     );
   }
 };
+/**
+ * Fetches the team IDs from the API.
+ */
+async function fetchTeams() {
+  try {
+    const promise = await fetch(
+      "https://fsa-puppy-bowl.herokuapp.com/api/COHORT-NAME/teams"
+    );
+    const response = await promise.json();
+    console.log(response);
+    state.teams = response.data.teams;
+    console.log(state.teams);
+  } catch (err) {
+    console.error(err);
+  }
+}
+fetchTeams();
 
 // === Event Listener ===
 
@@ -124,7 +142,7 @@ form.addEventListener("submit", async (event) => {
       image: form.imageUrl.value,
     };
     console.log(newPlayer);
-    // Post to endpoint with current form values to create and add an event
+    // Post to endpoint with current form values to create and add a player
     await addNewPlayer(newPlayer);
 
     // Clear form inputs
@@ -169,13 +187,11 @@ async function renderNewPlayerForm() {
     </div>
     <div>
         <label> Pick a Puppy Team: </label>
-        <input
-          id="numberClear"
-          name="teamNumber"
-          type="number"
-          min="1"
-          max="2"
-        />
+       <select id="teams">
+        <option>Available Teams</option>
+        <option>Ruff</option>
+        <option>Fluff</option>
+    </select>
         </div>
         <div>
         <button type="submit">Add Puppy</button> 
@@ -217,8 +233,7 @@ async function renderAllPlayers(players) {
     playerCard.innerHTML = `
         <div>
           <h3>${player.name}</h3>
-          <p>Player ID: </p>
-          <p>${player.id}</p>
+          <p>Player ID: ${player.id} </p>
         </div>
       `;
     playerList.append(playerCard);

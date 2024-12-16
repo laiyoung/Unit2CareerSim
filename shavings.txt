@@ -140,8 +140,13 @@ newPlayer:
       // playerId: needs to be a unused number (probably needs a math.random)
   }
 
-Form:
-<label for="playerName">Name:</label>
+
+Working form, before team is added:
+async function renderNewPlayerForm() {
+  try {
+    form.innerHTML = `
+        <div>
+         <label for="playerName">Name:</label>
         <input
           id="playerName"
           name="playerName"
@@ -149,6 +154,8 @@ Form:
           placeholder="New Puppy's Name"
           required
         />
+        </div>
+        <div>
         <label for="playerBreed">Puppy Breed:</label>
         <input
           id="playerBreed"
@@ -156,9 +163,12 @@ Form:
           type="text"
           placeholder="What breed is your puppy?"
         />
+        </div>
+        <div>
         <label> Picture: </label>
         <input type="text" name="imageUrl" placeholder="Image URL" />
-        <!-- Not sure if the team # should be on the form or not -->
+    </div>
+    <div>
         <label> Pick a Puppy Team: </label>
         <input
           id="numberClear"
@@ -167,8 +177,12 @@ Form:
           min="1"
           max="2"
         />
-        <button type="submit">Add Puppy</button>
-
-         <div id="detailsSidepanel" class="sidepanel">
-      <!-- <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&times;</a> -->
-    </div>
+        </div>
+        <div>
+        <button type="submit">Add Puppy</button> 
+        </div>
+      `;
+  } catch (err) {
+    console.error("Uh oh, trouble rendering the new player form!", err);
+  }
+}
