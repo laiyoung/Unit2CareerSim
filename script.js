@@ -271,9 +271,9 @@ const renderSinglePlayer = (player) => {
   const details = document.createElement("section");
   details.innerHTML = `
   <h3>${player.name}</h3>
-   <p>Player ID: </p>
-    <p>${player.id}</p>
-    <p>${player.status}<p>
+   <p>Player ID: ${player.id} </p>
+    <p>Player Status: ${player.status}<p>
+    <p>Team ID: ${player.teamId}</p>
    
 `;
 
