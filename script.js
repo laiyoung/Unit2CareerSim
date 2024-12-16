@@ -28,9 +28,9 @@ const fetchAllPlayers = async () => {
     if (!response.success) {
       throw response.error;
     }
-    console.log(response.data);
+    // console.log(response.data);
     state.players = response.data.players;
-    console.log(state.players);
+    // console.log(state.players);
   } catch (err) {
     console.error("Uh oh, trouble fetching players!", err);
   }
@@ -77,12 +77,12 @@ const addNewPlayer = async (playerObj) => {
       body: JSON.stringify(playerObj),
     });
     const response = await promise.json();
-    console.log(response);
+    // console.log(response);
 
     if (!response.success) {
       throw response.error;
     }
-    console.log(state.players);
+    // console.log(state.players);
     render();
   } catch (err) {
     console.error("Oops, something went wrong with adding that player!", err);
