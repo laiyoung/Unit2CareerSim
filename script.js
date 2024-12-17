@@ -32,6 +32,7 @@ const fetchAllPlayers = async () => {
     console.log(response.data);
     state.players = response.data.players;
     // console.log(state.players);
+    return response.data.players;
   } catch (err) {
     console.error("Uh oh, trouble fetching players!", err);
   }
@@ -44,8 +45,8 @@ const fetchAllPlayers = async () => {
  */
 const fetchSinglePlayer = async (playerId) => {
   try {
-    console.log(playerId.id);
-    const promise = await fetch(API_URL + "/players/" + playerId.id, {
+    console.log(playerId);
+    const promise = await fetch(API_URL + "/players/" + playerId, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
@@ -54,7 +55,7 @@ const fetchSinglePlayer = async (playerId) => {
     const response = await promise.json();
     state.player = response.data.player;
     // console.log(response.data.player);
-    // render();
+    return response.data.player
   } catch (err) {
     console.error(
       `Whoops, trouble getting player #${playerId} from the roster!`,
@@ -85,6 +86,7 @@ const addNewPlayer = async (playerObj) => {
     }
     // console.log(state.players);
     render();
+    return response.data.newPlayer
   } catch (err) {
     console.error("Oops, something went wrong with adding that player!", err);
   }
@@ -96,8 +98,8 @@ const addNewPlayer = async (playerObj) => {
  */
 const removePlayer = async (playerId) => {
   try {
-    console.log(playerId.id);
-    await fetch(API_URL + "/players/" + playerId.id, {
+    console.log(playerId);
+    await fetch(API_URL + "/players/" + playerId, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -244,7 +246,7 @@ async function renderAllPlayers(players) {
     detailsButton.innerText = "Player Details";
     playerCard.append(detailsButton);
     detailsButton.addEventListener("click", async () => {
-      await fetchSinglePlayer(player);
+      await fetchSinglePlayer(player.id);
       renderSinglePlayer(state.player);
     });
 
@@ -260,7 +262,7 @@ async function renderAllPlayers(players) {
     const deleteButton = document.createElement("button");
     deleteButton.innerText = "Delete Player";
     playerCard.append(deleteButton);
-    deleteButton.addEventListener("click", () => removePlayer(player));
+    deleteButton.addEventListener("click", () => removePlayer(player.id));
 
     return playerCard;
   });
