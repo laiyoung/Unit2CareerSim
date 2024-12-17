@@ -186,3 +186,8 @@ async function renderNewPlayerForm() {
     console.error("Uh oh, trouble rendering the new player form!", err);
   }
 }
+
+
+Examples of Destructuring:
+console.log(data.data.players.map((puppy)=>puppy.name));
+    return data.data.players
